@@ -31,9 +31,6 @@ protocol GraphicsDelegate: AnyObject {
 
 class Graphics {
     
-    static let FORCE_FIX_FIXED_SCALE = false
-    static let FORCE_FIX_FIXED_SCALE_SIZE = 3
-    
     weak var metalView: MetalView?
     weak var metalDevice: MTLDevice?
     weak var metalEngine: MetalEngine?
@@ -172,51 +169,6 @@ class Graphics {
     private(set) var pipelineState = PipelineState.invalid
     private(set) var samplerState = SamplerState.invalid
     private(set) var depthState = DepthState.invalid
-
-    lazy var scaledTextureSuffix: String = {
-        
-        let deviceScale: Int
-        if Graphics.FORCE_FIX_FIXED_SCALE {
-            deviceScale = Graphics.FORCE_FIX_FIXED_SCALE_SIZE
-        } else {
-            deviceScale = Int(scaleFactor + 0.5)
-        }
-        
-        if deviceScale >= 3 {
-            return "_3_0"
-        } else if deviceScale == 2 {
-            return "_2_0"
-        } else {
-            return "_1_0"
-        }
-    }()
-
-    @MainActor func loadTexture(name: String, `extension`: String) -> MTLTexture? {
-        if let bundleResourcePath = Bundle.main.resourcePath {
-            let filePath = bundleResourcePath + "/" + name + "." + `extension`
-            let fileURL = URL(filePath: filePath)
-            return loadTexture(url: fileURL)
-        }
-        return nil
-    }
-
-    @MainActor func loadTexture(nameWithExtension: String) -> MTLTexture? {
-        if let bundleResourcePath = Bundle.main.resourcePath {
-            let filePath = bundleResourcePath + "/" + nameWithExtension
-            let fileURL = URL(filePath: filePath)
-            return loadTexture(url: fileURL)
-        }
-        return nil
-    }
-
-    @MainActor func loadTextureScaled(name: String, `extension`: String) -> MTLTexture? {
-        if let bundleResourcePath = Bundle.main.resourcePath {
-            let filePath = bundleResourcePath + "/" + name + scaledTextureSuffix + "." + `extension`
-            let fileURL = URL(filePath: filePath)
-            return loadTexture(url: fileURL)
-        }
-        return nil
-    }
 
     @MainActor func loadTexture(url: URL) -> MTLTexture? {
         guard let nsImage = NSImage(contentsOf: url) else {

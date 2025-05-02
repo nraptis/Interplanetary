@@ -38,64 +38,6 @@ class Sprite {
         
     }
     
-    @MainActor func loadScaled(graphics: Graphics, name: String, `extension`: String) {
-        
-        self.name = name + "." + `extension`
-        let texture = graphics.loadTextureScaled(name: name, extension: `extension`)
-        
-        //static var FORCE_FIX_FIXED_SCALE = true
-        //static var FORCE_FIX_FIXED_SCALE_SIZE = 1
-        if Graphics.FORCE_FIX_FIXED_SCALE {
-            load(graphics: graphics, texture: texture, scaleFactor: Float(Graphics.FORCE_FIX_FIXED_SCALE_SIZE))
-        } else {
-            load(graphics: graphics, texture: texture, scaleFactor: graphics.scaleFactor)
-        }
-        
-        if let texture = texture {
-            if texture.width <= 0 || texture.height <= 0 {
-                print("Failed Load Texture: \(name) @ Scale: \(graphics.scaleFactor)")
-            }
-        } else {
-            print("Failed Load Texture: \(name) @ Scale: \(graphics.scaleFactor)")
-        }
-        
-    }
-    
-    @MainActor func load(graphics: Graphics, name: String, `extension`: String) {
-        self.name = name + "." + `extension`
-        let texture = graphics.loadTexture(name: name, extension: `extension`)
-        
-        if Graphics.FORCE_FIX_FIXED_SCALE {
-            load(graphics: graphics, texture: texture, scaleFactor: Float(Graphics.FORCE_FIX_FIXED_SCALE_SIZE))
-        } else {
-            load(graphics: graphics, texture: texture, scaleFactor: graphics.scaleFactor)
-        }
-        
-        //load(graphics: graphics, texture: texture, scaleFactor: graphics.scaleFactor)
-        //load(graphics: graphics, texture: texture, scaleFactor: 1.0)
-        
-        if let texture = texture {
-            if texture.width <= 0 || texture.height <= 0 {
-                print("Failed Load Texture: \(name)")
-            }
-        } else {
-            print("Failed Load Texture: \(name)")
-        }
-    }
-    
-    @MainActor func load(graphics: Graphics, nameWithExtension: String) {
-        self.name = nameWithExtension
-        let texture = graphics.loadTexture(nameWithExtension: nameWithExtension)
-        load(graphics: graphics, texture: texture, scaleFactor: graphics.scaleFactor)
-        if let texture = texture {
-            if texture.width <= 0 || texture.height <= 0 {
-                print("Failed Load Texture: \(nameWithExtension)")
-            }
-        } else {
-            print("Failed Load Texture: \(nameWithExtension)")
-        }
-    }
-    
     @MainActor func load(graphics: Graphics, texture: MTLTexture?, scaleFactor: Float) {
         if let texture = texture {
             self.texture = texture

@@ -94,8 +94,6 @@ class MetalViewController: NSViewController {
       }
     
     func drawloop() {
-        
-        print("drawloop became called")
         let timestamp = CACurrentMediaTime()
         var deltaTime: Float = 0.0
         if let previous = previousTimeStamp {
@@ -112,7 +110,6 @@ class MetalViewController: NSViewController {
             delegate.initialize()
         }
         delegate.update(deltaTime: deltaTime)
-        print("Updated: \(deltaTime)")
     }
     
 }
