@@ -23,6 +23,8 @@ final class ApplicationController {
     nonisolated(unsafe) static var insetMarkerPointCount = insetMarkerPointCountDefault
     
     
+    weak var interplanetaryContainerViewController: InterplanetaryContainerViewController?
+    
     weak var interplanetaryViewController: InterplanetaryViewController?
     weak var interplanetaryViewModel: InterplanetaryViewModel?
     weak var interplanetaryDocument: InterplanetaryDocument?

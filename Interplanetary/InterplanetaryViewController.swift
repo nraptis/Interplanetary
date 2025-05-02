@@ -7,9 +7,7 @@
 
 import Cocoa
 
-
 class InterplanetaryViewController: MetalViewController {
-    
     
     func dispose() {
         interplanetaryViewModel.dispose()
@@ -42,9 +40,7 @@ class InterplanetaryViewController: MetalViewController {
         interplanetaryEngine.interplanetaryViewModel = interplanetaryViewModel
         
         interplanetaryViewModel.interplanetaryViewController = self
-        
     }
-    
     
     deinit {
         print("[--] InterplanetaryViewController")

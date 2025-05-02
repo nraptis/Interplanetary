@@ -2,6 +2,8 @@ import Cocoa
 
 class InterplanetaryContainerViewController: NSViewController {
     
+    let skyControlPanel = SkyControlPanel(frame: NSRect(x: 40, y: 40, width: 300, height: 160))
+    
     let interplanetaryViewController: InterplanetaryViewController
     required init(interplanetaryViewModel: InterplanetaryViewModel,
                   interplanetaryScene: InterplanetaryScene,
@@ -20,12 +22,12 @@ class InterplanetaryContainerViewController: NSViewController {
         view.clipsToBounds = true
         
         interplanetaryViewController.interplanetaryContainerViewController = self
+        ApplicationController.shared.interplanetaryContainerViewController = self
     }
     
     override func loadView() {
         let rootView = NSView()
         rootView.translatesAutoresizingMaskIntoConstraints = false
-        rootView.wantsLayer = true // optional: for layer-backed view
         
         interplanetaryViewController.view.translatesAutoresizingMaskIntoConstraints = false
         rootView.addSubview(interplanetaryViewController.view)
@@ -38,6 +40,10 @@ class InterplanetaryContainerViewController: NSViewController {
         ])
         
         self.view = rootView // ✅ Important!
+        
+        
+        rootView.addSubview(skyControlPanel)
+        
     }
     
     func awake(interplanetaryViewModel: InterplanetaryViewModel, interplanetaryScene: InterplanetaryScene) {
