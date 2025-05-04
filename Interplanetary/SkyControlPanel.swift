@@ -13,6 +13,7 @@ class SkyControlPanel: NSView {
     private let raSubject = PassthroughSubject<Double, Never>()
     private let decSubject = PassthroughSubject<Double, Never>()
     private let zoomSubject = PassthroughSubject<Double, Never>()
+    private let swivelSubject = PassthroughSubject<Double, Never>()
 
     var raPublisher: AnyPublisher<Double, Never> {
         raSubject.eraseToAnyPublisher()
@@ -26,24 +27,24 @@ class SkyControlPanel: NSView {
         zoomSubject.eraseToAnyPublisher()
     }
     
+    var swivelPublisher: AnyPublisher<Double, Never> {
+            swivelSubject.eraseToAnyPublisher()
+        }
+    
     private let titleBar = NSView()
     private let expandCollapseButton = NSButton(title: "Toggle", target: nil, action: nil)
 
     private let raSlider = NSSlider(value: 12.0, minValue: 0.0, maxValue: 24.0, target: nil, action: nil)
     private let decSlider = NSSlider(value: 0.0, minValue: -90.0, maxValue: 90.0, target: nil, action: nil)
     private let zoomSlider = NSSlider(value: 8.0, minValue: 2.0, maxValue: 24.0, target: nil, action: nil)
+    private let swivelSlider = NSSlider(value: 0.0, minValue: 0.0, maxValue: Double.pi * 2.0, target: nil, action: nil)
+
 
     private let raLabel = NSTextField(labelWithString: "RA: 12.00h")
     private let decLabel = NSTextField(labelWithString: "Dec: 0.00°")
     private let zoomLabel = NSTextField(labelWithString: "Zoom: 8.00×")
-
-    private var initialLocation: NSPoint = .zero
-    private var isResizing = false
-    private var resizingCorner: Corner?
-
-    private enum Corner {
-        case bottomRight, bottomLeft, topLeft, topRight
-    }
+    private let swivelLabel = NSTextField(labelWithString: "Swivel: 8.00×")
+    
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -69,7 +70,7 @@ class SkyControlPanel: NSView {
         titleBar.addSubview(expandCollapseButton)
 
         // === SLIDERS + LABELS ===
-        [raSlider, decSlider, zoomSlider, raLabel, decLabel, zoomLabel].forEach {
+        [raSlider, decSlider, zoomSlider, swivelSlider, raLabel, decLabel, zoomLabel, swivelLabel].forEach {
             addSubview($0)
         }
 
@@ -81,6 +82,23 @@ class SkyControlPanel: NSView {
 
         zoomSlider.target = self
         zoomSlider.action = #selector(zoomSliderChanged)
+        
+        swivelSlider.target = self
+        swivelSlider.action = #selector(swivelSliderChanged)
+        
+        if let interplanetaryViewModel = ApplicationController.shared.interplanetaryViewModel {
+            raSlider.doubleValue = Double(interplanetaryViewModel.interplanetaryScene.rightAscension)
+            decSlider.doubleValue = Double(interplanetaryViewModel.interplanetaryScene.declination)
+            zoomSlider.doubleValue = Double(interplanetaryViewModel.interplanetaryScene.zoom)
+            swivelSlider.doubleValue = Double(interplanetaryViewModel.interplanetaryScene.swivel)
+            
+            print("Fix'd raSlider.doubleValue => \(raSlider.doubleValue)")
+            print("Fix'd raSlider.decSlider => \(decSlider.doubleValue)")
+            print("Fix'd zoomSlider.doubleValue => \(zoomSlider.doubleValue)")
+            print("Fix'd swivelSlider.doubleValue => \(swivelSlider.doubleValue)")
+            
+        }
+        
     }
 
     override func layout() {
@@ -123,6 +141,18 @@ class SkyControlPanel: NSView {
                                   y: zoomLabel.frame.minY,
                                   width: bounds.width - labelWidth - 3 * padding,
                                   height: sliderHeight)
+        
+        
+        swivelLabel.frame = NSRect(x: padding,
+                                 y: zoomLabel.frame.minY - padding - sliderHeight,
+                                 width: labelWidth,
+                                 height: sliderHeight)
+
+        swivelSlider.frame = NSRect(x: labelWidth + 2 * padding,
+                                  y: swivelLabel.frame.minY,
+                                  width: bounds.width - labelWidth - 3 * padding,
+                                  height: sliderHeight)
+
     }
 
     @objc private func raSliderChanged() {
@@ -143,18 +173,12 @@ class SkyControlPanel: NSView {
         zoomSubject.send(value)
     }
     
-    var rightAscension: Double {
-        raSlider.doubleValue
+    @objc private func swivelSliderChanged() {
+        let value = swivelSlider.doubleValue
+        swivelLabel.stringValue = String(format: "Swivel: %.2f°", value)
+        swivelSubject.send(value)
     }
-
-    var declination: Double {
-        decSlider.doubleValue
-    }
-
-    var zoom: Double {
-        zoomSlider.doubleValue
-    }
-
+    
     var button: NSButton {
         expandCollapseButton
     }

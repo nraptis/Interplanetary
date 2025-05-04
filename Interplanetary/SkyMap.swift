@@ -8,18 +8,17 @@
 import Foundation
 
 class SkyMapPoint {
-    var rightAscension = Double(0.0)
-    var declination = Double(0.0)
-    var x_percent = Double(0.0)
-    var y_percent = Double(0.0)
+    var coordinate = CelestialCoordinate()
+    var x_percent = Float(0.0)
+    var y_percent = Float(0.0)
 }
 
 class SkyMapStrip {
     var vertices = [SkyMapPoint]()
     var indices = [UInt32]()
-    let y_percent_1: Double
-    let y_percent_2: Double
-    init(y_percent_1: Double, y_percent_2: Double) {
+    let y_percent_1: Float
+    let y_percent_2: Float
+    init(y_percent_1: Float, y_percent_2: Float) {
         self.y_percent_1 = y_percent_1
         self.y_percent_2 = y_percent_2
     }
@@ -48,15 +47,16 @@ class SkyMap {
         }
 
         for x_index in 0...countH {
-            let x_percent = Double(x_index) / Double(countH)
+            let x_percent = Float(x_index) / Float(countH)
 
             for y_index in 0...countV {
-                let y_percent = Double(y_index) / Double(countV)
+                let y_percent = Float(y_index) / Float(countV)
                 let point = grid[x_index][y_index]
                 point.x_percent = x_percent
                 point.y_percent = y_percent
-                point.rightAscension = 24.0 * x_percent                 // RA: 0h → 24h
-                point.declination = -90.0 + 180.0 * y_percent           // Dec: –90° → +90°
+                
+                point.coordinate.set(rightAscension: 12.0 - 24.0 * x_percent,
+                                     declination: 90.0 - 180.0 * y_percent)
             }
         }
         
@@ -65,32 +65,21 @@ class SkyMap {
         for y_index in 1...countV {
             let y_index_1 = y_index - 1
             let y_index_2 = y_index
-            let y_percent_1 = Double(y_index_1) / Double(countV)
-            let y_percent_2 = Double(y_index_2) / Double(countV)
+            let y_percent_1 = Float(y_index_1) / Float(countV)
+            let y_percent_2 = Float(y_index_2) / Float(countV)
             
             let strip = SkyMapStrip(y_percent_1: y_percent_1, y_percent_2: y_percent_2)
             var strip_index = UInt32(0)
             for x_index in 0...countH {
-                
                 strip.vertices.append(grid[x_index][y_index_2])
                 strip.indices.append(strip_index)
                 strip_index += 1
-                
                 strip.vertices.append(grid[x_index][y_index_1])
                 strip.indices.append(strip_index)
                 strip_index += 1
             }
-            
             _strips.append(strip)
-            
         }
-        
-        
         strips = _strips
-        
-        
     }
-    
-    
-    
 }

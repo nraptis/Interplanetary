@@ -28,9 +28,8 @@ class InterplanetaryScene: GraphicsDelegate {
     let width2: Float
     let height2: Float
     
-    let skyMap = SkyMap(countH: 24, countV: 12)
+    let skyMap = SkyMap(countH: 64, countV: 32)
     
-    var skyStrips2D = [SkyStrip2D]()
     var skyStrips3D = [SkyStrip3D]()
     
     
@@ -39,10 +38,20 @@ class InterplanetaryScene: GraphicsDelegate {
     let hippo_instance_2d = IndexedSpriteInstance2D()
     
     
-    
     let funny_map_2048 = Sprite()
     let funny_map_4096 = Sprite()
     
+    
+    let strong_map_4096 = Sprite()
+    
+    
+    let simple_constellation_map_4096 = Sprite()
+    
+    
+    
+    
+    var chord_instances = [ChordInstance3D]()
+    var chords = [Chord3D]()
     
     
     
@@ -67,6 +76,45 @@ class InterplanetaryScene: GraphicsDelegate {
         regularClipFrameY = 0.0
         regularClipFrameWidth = width
         regularClipFrameHeight = height
+        
+        
+        
+        
+        //alkaid -> mizar
+        //mizar -> alioth
+        //alioth -> megrez
+        //megrez -> dubhe
+        //dubhe -> merak
+        //merak -> phecda
+        //phecda -> megrez
+        
+        let radius = Float(0.00125)
+        let count = 12
+        let multiply = Float(1.00125)
+        
+        chords.append(Chord3D(coord1: CelestialCoordinate.alkaid, coord2: CelestialCoordinate.mizar, count: count, radius: radius, multiply: multiply))
+        chords.append(Chord3D(coord1: CelestialCoordinate.mizar, coord2: CelestialCoordinate.alioth, count: count, radius: radius, multiply: multiply))
+        chords.append(Chord3D(coord1: CelestialCoordinate.alioth, coord2: CelestialCoordinate.megrez, count: count, radius: radius, multiply: multiply))
+        chords.append(Chord3D(coord1: CelestialCoordinate.megrez, coord2: CelestialCoordinate.dubhe, count: count, radius: radius, multiply: multiply))
+        chords.append(Chord3D(coord1: CelestialCoordinate.dubhe, coord2: CelestialCoordinate.merak, count: count, radius: radius, multiply: multiply))
+        chords.append(Chord3D(coord1: CelestialCoordinate.merak, coord2: CelestialCoordinate.phecda, count: count, radius: radius, multiply: multiply))
+        chords.append(Chord3D(coord1: CelestialCoordinate.phecda, coord2: CelestialCoordinate.megrez, count: count, radius: radius, multiply: multiply))
+        
+        // Orion ==>
+        chords.append(Chord3D(coord1: CelestialCoordinate.betelgeuse, coord2: CelestialCoordinate.meissa, count: count, radius: radius, multiply: multiply))
+        chords.append(Chord3D(coord1: CelestialCoordinate.meissa, coord2: CelestialCoordinate.bellatrix, count: count, radius: radius, multiply: multiply))
+        chords.append(Chord3D(coord1: CelestialCoordinate.betelgeuse, coord2: CelestialCoordinate.bellatrix, count: count, radius: radius, multiply: multiply))
+        chords.append(Chord3D(coord1: CelestialCoordinate.betelgeuse, coord2: CelestialCoordinate.alnitak, count: count, radius: radius, multiply: multiply))
+        chords.append(Chord3D(coord1: CelestialCoordinate.bellatrix, coord2: CelestialCoordinate.mintaka, count: count, radius: radius, multiply: multiply))
+        chords.append(Chord3D(coord1: CelestialCoordinate.alnitak, coord2: CelestialCoordinate.alnilam, count: count, radius: radius, multiply: multiply))
+        chords.append(Chord3D(coord1: CelestialCoordinate.alnilam, coord2: CelestialCoordinate.mintaka, count: count, radius: radius, multiply: multiply))
+        chords.append(Chord3D(coord1: CelestialCoordinate.alnitak, coord2: CelestialCoordinate.saiph, count: count, radius: radius, multiply: multiply))
+        chords.append(Chord3D(coord1: CelestialCoordinate.mintaka, coord2: CelestialCoordinate.rigel, count: count, radius: radius, multiply: multiply))
+        
+        for chord in chords {
+            let chord_instance = ChordInstance3D(chord: chord)
+            chord_instances.append(chord_instance)
+        }
     }
     
     func awake(appWidth: Float,
@@ -84,7 +132,6 @@ class InterplanetaryScene: GraphicsDelegate {
         interplanetaryEngine.graphics = graphics
         interplanetaryEngine.load()
         
-        
         guard let graphics = graphics else {
             return
         }
@@ -97,7 +144,16 @@ class InterplanetaryScene: GraphicsDelegate {
         let funny_map_4096_texture = graphics.loadTexture(fileName: "star_map_8192_4096_funny.jpg")
         funny_map_4096.load(graphics: graphics, texture: funny_map_4096_texture, scaleFactor: 1.0)
         
-
+        
+        let strong_map_4096_texture = graphics.loadTexture(fileName: "star_map_8192_4096.jpg")
+        strong_map_4096.load(graphics: graphics, texture: funny_map_4096_texture, scaleFactor: 1.0)
+        
+        
+        let simple_constellation_map_4096_texture = graphics.loadTexture(fileName: "const_map_8192_4096.jpg")
+        simple_constellation_map_4096.load(graphics: graphics, texture: simple_constellation_map_4096_texture, scaleFactor: 1.0)
+        
+        
+        
         
         let hippo_texture = graphics.loadTexture(fileName: "hippogriff.png")
         
@@ -126,27 +182,46 @@ class InterplanetaryScene: GraphicsDelegate {
         hippo_instance_bloom.load(graphics: graphics)
         
         
-        /*
-        for skyMapStrip in skyMap.strips {
-            let skyStrip2D = SkyStrip2D(strip: skyMapStrip)
-            skyStrip2D.load(graphics: graphics, map: funny_map_2048)
-            skyStrips2D.append(skyStrip2D)
-        }
-        */
-        
-        
         
         for skyMapStrip in skyMap.strips {
             let skyStrip3D = SkyStrip3D(strip: skyMapStrip)
-            skyStrip3D.load(graphics: graphics, map: funny_map_2048)
+            skyStrip3D.load(graphics: graphics, map: simple_constellation_map_4096)
             skyStrips3D.append(skyStrip3D)
+        }
+        
+        for chord_instance in chord_instances {
+            chord_instance.load(graphics: graphics)
         }
         
     }
     
-    var ra = Double(0.0)
-    var dec = Double(0.0)
-    var zoom = Double(1.0)
+    //var rightAscension = CelestialCoordinate.alpha_centauri.ra
+    //var declination = CelestialCoordinate.alpha_centauri.dec
+    //var zoom = Float(3.0)
+    
+    //var rightAscension = CelestialCoordinate.betelgeuse.ra
+    //var declination = CelestialCoordinate.betelgeuse.dec
+    //var zoom = Float(3.0)
+    
+    //var rightAscension = CelestialCoordinate.sirius.ra
+    //var declination = CelestialCoordinate.sirius.dec
+    //var zoom = Float(3.0)
+    
+    //var rightAscension = CelestialCoordinate.dubhe.ra
+    //var declination = CelestialCoordinate.dubhe.dec
+    //var zoom = Float(3.0)
+    
+    var rightAscension = CelestialCoordinate.megrez.rightAscension
+    var declination = CelestialCoordinate.megrez.declination
+    var zoom = Float(3.75)
+    var swivel = Float(0.0)
+    
+    
+    
+    
+    //var rightAscension = Float(24.0)
+    //var declination = Float(20.0)
+    //var zoom = Float(7.5)
     
     
     func loadComplete() {
@@ -158,28 +233,38 @@ class InterplanetaryScene: GraphicsDelegate {
             
             skyControlPanel.raPublisher
                 .sink { newRA in
-                    print("Observed new RA: \(newRA)")
-                    // Update your model or scene here
-                    self.ra = newRA
+                    self.rightAscension = Float(newRA)
                 }
                 .store(in: &subscriptions)
             
             skyControlPanel.decPublisher
                 .sink { newDec in
-                    print("Observed new Dec: \(newDec)")
-                    // Update your model or scene here
-                    self.dec = newDec
+                    self.declination = Float(newDec)
                 }
                 .store(in: &subscriptions)
             
             skyControlPanel.zoomPublisher
                 .sink { newZoom in
-                    print("Observed new Zoom: \(newZoom)")
-                    // Update your model or scene here
-                    self.zoom = newZoom
+                    self.zoom = Float(newZoom)
                 }
                 .store(in: &subscriptions)
+            skyControlPanel.swivelPublisher
+                            .sink { newSwivel in
+                                self.swivel = Float(newSwivel)
+                            }
+                            .store(in: &subscriptions)
         }
+        
+        let cord = Chord3D(x1: 0, y1: 0, z1: 0, x2: 0, y2: 0, z2: 1, count: 6, radius: 10.0)
+        print("cord.shape_x1 = \(cord.shape_x1)")
+        print("cord.shape_y1 = \(cord.shape_y1)")
+        print("cord.shape_z1 = \(cord.shape_z1)")
+        print("cord.shape_x2 = \(cord.shape_x2)")
+        print("cord.shape_y2 = \(cord.shape_y2)")
+        print("cord.shape_z2 = \(cord.shape_z2)")
+        print("EOLE")
+        
+        
     }
     
     var rot = Float(0.0)
@@ -246,14 +331,16 @@ class InterplanetaryScene: GraphicsDelegate {
         
         
         
-        let raRadians = Float(ra / 24.0 * 2.0 * Double.pi) // RA: 0–24h → 0–2π
-        let decRadians = Float(dec / 180.0 * Double.pi)    // Dec: -90–90° → -π/2–π/2
-        let radius = Float(zoom)                           // Zoom is treated as distance
+        
+        //let raRadians = Float(ra / 24.0 * 2.0 * Float.pi)   // RA: 0–24h → 0–2π
+        //let decRadians = Float(dec / 180.0 * Float.pi)      // Dec: -90–90° → -π/2–π/2
+        let radius = Float(zoom)                            // Zoom is treated as distance
 
+        
         // Convert spherical (radius, dec, ra) to cartesian
-        let eyeX = radius * cos(decRadians) * cos(raRadians)
-        let eyeY = radius * sin(decRadians)
-        let eyeZ = radius * cos(decRadians) * sin(raRadians)
+        let eyeX = radius * CelestialCoordinate.x(ra: rightAscension, dec: declination)
+        let eyeY = radius * CelestialCoordinate.y(ra: rightAscension, dec: declination)
+        let eyeZ = radius * CelestialCoordinate.z(ra: rightAscension, dec: declination)
         
         //let distance = Float(4.0) // DELETE THIS LINE
 
@@ -268,21 +355,40 @@ class InterplanetaryScene: GraphicsDelegate {
                       upY: 1.0,
                       upZ: 0.0)
         
+        graphics.set(depthState: .lessThan, renderEncoder: renderEncoder)
+        
         let aspect = graphics.width / graphics.height
         var perspective = matrix_float4x4()
         perspective.perspective(fovy: Float.pi * 0.125, aspect: aspect, nearZ: 0.01, farZ: 255.0)
         
+        perspective.rotateZ(radians: swivel)
+        
+        
         let modelView = matrix_identity_float4x4
         let projection = simd_mul(perspective, lookAt)
         
+        
         for skyStrip3D in skyStrips3D {
-            
             skyStrip3D.draw3D(renderEncoder: renderEncoder,
                               projectionMatrix: projection,
                               modelViewMatrix: modelView)
+        }
+        
+        
+        //graphics.set(depthState: .disabled, renderEncoder: renderEncoder)
+        
+        
+        
+        for chord_instance in chord_instances {
+            
+            chord_instance.projectionMatrix = projection
+            chord_instance.modelViewMatrix = modelView
+            
+            chord_instance.render(renderEncoder: renderEncoder, pipelineState: .shapeNodeIndexed3DNoBlending)
             
             
         }
+        
         
         
         /*

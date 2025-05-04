@@ -27,14 +27,9 @@ class SkyStrip3D {
             let vertex = strip.vertices[strip_index]
             let index = strip.indices[strip_index]
             
-            let raRadians = (Double.pi * 2.0) * ((24.0 - vertex.rightAscension) / 24.0)
-            let decRadians = (Double.pi) * (vertex.declination / 180.0)
-
-            let x = cos(decRadians) * cos(raRadians)
-            let y = sin(decRadians)
-            let z = cos(decRadians) * sin(raRadians)
-            
-            // This does not render, the x, y, and z are all too small?
+            let x = vertex.coordinate.getX()
+            let y = vertex.coordinate.getY()
+            let z = vertex.coordinate.getZ()
             
             let sprite_vertex = Sprite3DVertex(x: Float(x),
                                                y: Float(y),
@@ -56,6 +51,8 @@ class SkyStrip3D {
             
             strip_index += 1
         }
+        
+        spriteBuffer3D.cullMode = .front
     }
     
     func load(graphics: Graphics,
