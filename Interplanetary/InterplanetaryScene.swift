@@ -87,11 +87,11 @@ class InterplanetaryScene: GraphicsDelegate {
         //dubhe -> merak
         //merak -> phecda
         //phecda -> megrez
-        
+
         let radius = Float(0.00125)
         let count = 12
         let multiply = Float(1.00125)
-        
+
         chords.append(Chord3D(coord1: CelestialCoordinate.alkaid, coord2: CelestialCoordinate.mizar, count: count, radius: radius, multiply: multiply))
         chords.append(Chord3D(coord1: CelestialCoordinate.mizar, coord2: CelestialCoordinate.alioth, count: count, radius: radius, multiply: multiply))
         chords.append(Chord3D(coord1: CelestialCoordinate.alioth, coord2: CelestialCoordinate.megrez, count: count, radius: radius, multiply: multiply))
