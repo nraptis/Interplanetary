@@ -57,11 +57,6 @@ class InterplanetaryScene: GraphicsDelegate {
     
     let hippo_instance_bloom = IndexedShapeInstance3D(sentinelNode: .init(x: 0.0, y: 0.0, z: 0.0))
     
-    //@MainActor
-    lazy var interplanetaryEngine: InterplanetaryEngine = {
-        InterplanetaryEngine(interplanetaryScene: self, interplanetaryDocument: interplanetaryDocument)
-    }()
-    
     init(interplanetaryDocument: InterplanetaryDocument) {
         
         width = Device.width
@@ -111,10 +106,7 @@ class InterplanetaryScene: GraphicsDelegate {
         chords.append(Chord3D(coord1: CelestialCoordinate.alnitak, coord2: CelestialCoordinate.saiph, count: count, radius: radius, multiply: multiply))
         chords.append(Chord3D(coord1: CelestialCoordinate.mintaka, coord2: CelestialCoordinate.rigel, count: count, radius: radius, multiply: multiply))
         
-        for chord in chords {
-            let chord_instance = ChordInstance3D(chord: chord)
-            chord_instances.append(chord_instance)
-        }
+        
     }
     
     func awake(appWidth: Float,
@@ -129,14 +121,28 @@ class InterplanetaryScene: GraphicsDelegate {
     }
     
     func load() {
-        interplanetaryEngine.graphics = graphics
-        interplanetaryEngine.load()
+        
+        var coordinate_index = 1
+        while coordinate_index < interplanetaryDocument.coordinates.count {
+            let coordinate_prev = interplanetaryDocument.coordinates[coordinate_index - 1]
+            let coordinate_curr = interplanetaryDocument.coordinates[coordinate_index]
+        
+            chords.append(Chord3D(coord1: coordinate_prev, coord2: coordinate_curr, count: 8, radius: 0.001, multiply: 1.01))
+            
+            
+            coordinate_index += 1
+        }
+        
+        
+        for chord in chords {
+            let chord_instance = ChordInstance3D(chord: chord)
+            chord_instances.append(chord_instance)
+        }
+        
         
         guard let graphics = graphics else {
             return
         }
-        
-        
         
         let funny_map_2048_texture = graphics.loadTexture(fileName: "star_map_4096_2048_funny.jpg")
         funny_map_2048.load(graphics: graphics, texture: funny_map_2048_texture, scaleFactor: 1.0)
@@ -225,8 +231,6 @@ class InterplanetaryScene: GraphicsDelegate {
     
     
     func loadComplete() {
-        interplanetaryEngine.loadComplete()
-        
         
         if let interplanetaryContainerViewController = ApplicationController.shared.interplanetaryContainerViewController {
             let skyControlPanel = interplanetaryContainerViewController.skyControlPanel

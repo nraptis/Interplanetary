@@ -21,6 +21,7 @@ final class RootViewModel: NSObject, @unchecked Sendable {
                                               width: Float,
                                               height: Float) {
         
+        interplanetaryDocument.load()
         let interplanetaryScene = InterplanetaryScene(interplanetaryDocument: interplanetaryDocument)
         let interplanetaryViewModel = InterplanetaryViewModel(interplanetaryScene: interplanetaryScene,
                                                               interplanetaryDocument: interplanetaryDocument,

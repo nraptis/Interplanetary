@@ -17,7 +17,6 @@ class InterplanetaryViewController: MetalViewController {
     
     let interplanetaryViewModel: InterplanetaryViewModel
     let interplanetaryScene: InterplanetaryScene
-    let interplanetaryEngine: InterplanetaryEngine
     let interplanetaryDocument: InterplanetaryDocument
     
     required init(interplanetaryViewModel: InterplanetaryViewModel,
@@ -27,7 +26,6 @@ class InterplanetaryViewController: MetalViewController {
                   height: Float) {
         self.interplanetaryViewModel = interplanetaryViewModel
         self.interplanetaryScene = interplanetaryScene
-        self.interplanetaryEngine = interplanetaryScene.interplanetaryEngine
         self.interplanetaryDocument = interplanetaryDocument
         
         super.init(delegate: interplanetaryScene,
@@ -37,8 +35,6 @@ class InterplanetaryViewController: MetalViewController {
         ApplicationController.shared.interplanetaryViewController = self
         
         interplanetaryScene.interplanetaryViewModel = interplanetaryViewModel
-        interplanetaryEngine.interplanetaryViewModel = interplanetaryViewModel
-        
         interplanetaryViewModel.interplanetaryViewController = self
     }
     

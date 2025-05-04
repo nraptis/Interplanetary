@@ -14,7 +14,6 @@ class InterplanetaryViewModel {
     let sceneWidth: Float
     let sceneHeight: Float
     let interplanetaryScene: InterplanetaryScene
-    let interplanetaryEngine: InterplanetaryEngine
     let interplanetaryDocument: InterplanetaryDocument
     let rootViewModel: RootViewModel
     
@@ -23,7 +22,6 @@ class InterplanetaryViewModel {
                     rootViewModel: RootViewModel) {
         
         self.interplanetaryScene = interplanetaryScene
-        self.interplanetaryEngine = interplanetaryScene.interplanetaryEngine
         self.interplanetaryDocument = interplanetaryDocument
         self.rootViewModel = rootViewModel
         
