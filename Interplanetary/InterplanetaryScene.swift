@@ -12,6 +12,28 @@ import Combine
 
 class InterplanetaryScene: GraphicsDelegate {
     
+    
+    //var rightAscension = CelestialCoordinate.alpha_centauri.ra
+    //var declination = CelestialCoordinate.alpha_centauri.dec
+    //var zoom = Float(3.0)
+    
+    //var rightAscension = CelestialCoordinate.betelgeuse.ra
+    //var declination = CelestialCoordinate.betelgeuse.dec
+    //var zoom = Float(3.0)
+    
+    //var rightAscension = CelestialCoordinate.sirius.ra
+    //var declination = CelestialCoordinate.sirius.dec
+    //var zoom = Float(3.0)
+    
+    //var rightAscension = CelestialCoordinate.dubhe.ra
+    //var declination = CelestialCoordinate.dubhe.dec
+    //var zoom = Float(3.0)
+    
+    var rightAscension = CelestialCoordinate.mintaka.rightAscension
+    var declination = CelestialCoordinate.mintaka.declination
+    var zoom = Float(3.75)
+    var swivel = Float(0.0)
+    
     var regularClipFrameX = Float(0.0)
     var regularClipFrameY = Float(0.0)
     var regularClipFrameWidth = Float(320.0)
@@ -201,33 +223,7 @@ class InterplanetaryScene: GraphicsDelegate {
         
     }
     
-    //var rightAscension = CelestialCoordinate.alpha_centauri.ra
-    //var declination = CelestialCoordinate.alpha_centauri.dec
-    //var zoom = Float(3.0)
     
-    //var rightAscension = CelestialCoordinate.betelgeuse.ra
-    //var declination = CelestialCoordinate.betelgeuse.dec
-    //var zoom = Float(3.0)
-    
-    //var rightAscension = CelestialCoordinate.sirius.ra
-    //var declination = CelestialCoordinate.sirius.dec
-    //var zoom = Float(3.0)
-    
-    //var rightAscension = CelestialCoordinate.dubhe.ra
-    //var declination = CelestialCoordinate.dubhe.dec
-    //var zoom = Float(3.0)
-    
-    var rightAscension = CelestialCoordinate.megrez.rightAscension
-    var declination = CelestialCoordinate.megrez.declination
-    var zoom = Float(3.75)
-    var swivel = Float(0.0)
-    
-    
-    
-    
-    //var rightAscension = Float(24.0)
-    //var declination = Float(20.0)
-    //var zoom = Float(7.5)
     
     
     func loadComplete() {
@@ -364,6 +360,8 @@ class InterplanetaryScene: GraphicsDelegate {
         let aspect = graphics.width / graphics.height
         var perspective = matrix_float4x4()
         perspective.perspective(fovy: Float.pi * 0.125, aspect: aspect, nearZ: 0.01, farZ: 255.0)
+        
+        perspective.scale(x: -1.0, y: 1.0, z: 1.0)
         
         perspective.rotateZ(radians: swivel)
         

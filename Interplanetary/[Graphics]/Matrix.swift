@@ -362,16 +362,35 @@ extension matrix_float4x4 {
     
     mutating func scale(_ factor: Float) {
         columns.0.x = columns.0.x * factor
-        columns.1.x = columns.1.x * factor
-        columns.2.x = columns.2.x * factor
         columns.0.y = columns.0.y * factor
-        columns.1.y = columns.1.y * factor
-        columns.2.y = columns.2.y * factor
         columns.0.z = columns.0.z * factor
-        columns.1.z = columns.1.z * factor
-        columns.2.z = columns.2.z * factor
         columns.0.w = columns.0.w * factor
+        
+        columns.1.x = columns.1.x * factor
+        columns.1.y = columns.1.y * factor
+        columns.1.z = columns.1.z * factor
         columns.1.w = columns.1.w * factor
+        
+        columns.2.x = columns.2.x * factor
+        columns.2.y = columns.2.y * factor
+        columns.2.z = columns.2.z * factor
         columns.2.w = columns.2.w * factor
+    }
+    
+    mutating func scale(x: Float, y: Float, z: Float) {
+        columns.0.x = columns.0.x * x
+        columns.0.y = columns.0.y * x
+        columns.0.z = columns.0.z * x
+        columns.0.w = columns.0.w * x
+        
+        columns.1.x = columns.1.x * y
+        columns.1.y = columns.1.y * y
+        columns.1.z = columns.1.z * y
+        columns.1.w = columns.1.w * y
+        
+        columns.2.x = columns.2.x * z
+        columns.2.y = columns.2.y * z
+        columns.2.z = columns.2.z * z
+        columns.2.w = columns.2.w * z
     }
 }
