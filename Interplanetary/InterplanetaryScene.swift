@@ -27,7 +27,7 @@ class InterplanetaryScene: GraphicsDelegate {
     let assetWadPlanetSkins = AssetWadPlanetSkins()
     
     let scene_left = JupiterOrbitSceneSlice()
-    let scene_right = JupiterOrbitSceneSlice()
+    //let scene_right = JupiterOrbitSceneSlice()
     var scene_slices = [SceneSlice]()
     
     let width: Float
@@ -35,7 +35,7 @@ class InterplanetaryScene: GraphicsDelegate {
     let width2: Float
     let height2: Float
     
-    let skyMap = SkyMap(countH: 12, countV: 8)
+    let skyMap = SkyMap(countH: 32, countV: 32)
     
     init(interplanetaryDocument: InterplanetaryDocument) {
         
@@ -45,6 +45,7 @@ class InterplanetaryScene: GraphicsDelegate {
         let widthi = Int(width + 0.5)
         let heighti = Int(height + 0.5)
         
+        /*
         let left_width = widthi / 2
         let right_x = left_width
         let right_width = (widthi - left_width)
@@ -54,6 +55,7 @@ class InterplanetaryScene: GraphicsDelegate {
         scene_left.frameWidth = left_width
         scene_left.frameHeight = heighti
         
+        
         scene_right.frameX = right_x
         scene_right.frameY = 0
         scene_right.frameWidth = right_width
@@ -61,6 +63,14 @@ class InterplanetaryScene: GraphicsDelegate {
         
         scene_slices.append(scene_left)
         scene_slices.append(scene_right)
+        */
+        
+        scene_left.frameX = 0
+        scene_left.frameY = 0
+        scene_left.frameWidth = widthi
+        scene_left.frameHeight = heighti
+        
+        scene_slices.append(scene_left)
         
         width2 = Float(Int(width * 0.5 + 0.5))
         height2 = Float(Int(height * 0.5 + 0.5))

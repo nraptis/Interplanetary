@@ -18,14 +18,7 @@ class JupiterOrbitSceneSlice: SceneSlice {
     var chord_instances = [ChordInstance3D]()
     var chords = [Chord3D]()
     
-    
-    var sun = PlanetInstance(countH: 8, countV: 8)
-    var mercury = PlanetInstance(countH: 8, countV: 8)
-    var jupiter = PlanetInstance(countH: 8, countV: 8)
-    var earth = PlanetInstance(countH: 8, countV: 8)
-    var venus = PlanetInstance(countH: 8, countV: 8)
-    
-    
+    var sun = PlanetInstance(countH: 32, countV: 32)
     
     override func initialize(graphics: Graphics, interplanetaryScene: InterplanetaryScene) {
         
@@ -112,7 +105,7 @@ class JupiterOrbitSceneSlice: SceneSlice {
         }
         
         var sun_instructions = [PlanetInstanceLayerInstruction]()
-        sun_instructions.append(PlanetInstanceLayerInstruction(scale: 1.1, sprite: assetWadPlanetSkins.uvw_map_sun))
+        sun_instructions.append(PlanetInstanceLayerInstruction(scale: 0.25, sprite: assetWadPlanetSkins.uvw_map_sun))
         sun.load(graphics: graphics, instructions: sun_instructions)
         
         
