@@ -50,6 +50,23 @@ class InterplanetaryScene: GraphicsDelegate {
     let width2: Float
     let height2: Float
     
+    var uvw_map_earth = Sprite()
+    var uvw_map_earth_clouds = Sprite()
+    
+    var uvw_map_sun = Sprite()
+    
+    var uvw_map_moon = Sprite()
+    
+    var uvw_map_jupiter = Sprite()
+    
+    var uvw_map_venus = Sprite()
+    var uvw_map_venus_clouds = Sprite()
+    
+    
+    
+    
+    
+    
     let skyMap = SkyMap(countH: 64, countV: 32)
     
     var skyStrips3D = [SkyStrip3D]()
@@ -165,6 +182,50 @@ class InterplanetaryScene: GraphicsDelegate {
         guard let graphics = graphics else {
             return
         }
+        
+        
+        
+        uvw_map_earth.load(graphics: graphics,
+                           texture: graphics.loadTexture(fileName: "earth_1024.jpg"),
+                           scaleFactor: 1.0)
+        print("Loaded uvw_map_earth => [\(uvw_map_earth.width) x \(uvw_map_earth.height)]")
+        
+        uvw_map_earth_clouds.load(graphics: graphics,
+                           texture: graphics.loadTexture(fileName: "earth_clouds_1024.jpg"),
+                           scaleFactor: 1.0)
+        print("Loaded uvw_map_earth_clouds => [\(uvw_map_earth_clouds.width) x \(uvw_map_earth_clouds.height)]")
+        
+        
+        uvw_map_sun.load(graphics: graphics,
+                           texture: graphics.loadTexture(fileName: "sun_1024.jpg"),
+                           scaleFactor: 1.0)
+        print("Loaded uvw_map_sun => [\(uvw_map_sun.width) x \(uvw_map_sun.height)]")
+        
+        
+        uvw_map_jupiter.load(graphics: graphics,
+                           texture: graphics.loadTexture(fileName: "jupiter_1024.jpg"),
+                           scaleFactor: 1.0)
+        print("Loaded uvw_map_jupiter => [\(uvw_map_jupiter.width) x \(uvw_map_jupiter.height)]")
+        
+        
+        uvw_map_moon.load(graphics: graphics,
+                           texture: graphics.loadTexture(fileName: "moon_512.jpg"),
+                           scaleFactor: 1.0)
+        print("Loaded uvw_map_moon => [\(uvw_map_moon.width) x \(uvw_map_moon.height)]")
+        
+        
+        uvw_map_venus.load(graphics: graphics,
+                           texture: graphics.loadTexture(fileName: "venus_1024.jpg"),
+                           scaleFactor: 1.0)
+        print("Loaded uvw_map_venus => [\(uvw_map_venus.width) x \(uvw_map_venus.height)]")
+        
+        uvw_map_venus_clouds.load(graphics: graphics,
+                           texture: graphics.loadTexture(fileName: "venus_clouds_1024.jpg"),
+                           scaleFactor: 1.0)
+        print("Loaded uvw_map_venus_clouds => [\(uvw_map_venus_clouds.width) x \(uvw_map_venus_clouds.height)]")
+
+        
+        
         
         let funny_map_2048_texture = graphics.loadTexture(fileName: "star_map_4096_2048_funny.jpg")
         funny_map_2048.load(graphics: graphics, texture: funny_map_2048_texture, scaleFactor: 1.0)
