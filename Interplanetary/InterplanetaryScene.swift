@@ -26,7 +26,9 @@ class InterplanetaryScene: GraphicsDelegate {
     let assetWadStarGlobes = AssetWadStarGlobes()
     let assetWadPlanetSkins = AssetWadPlanetSkins()
     
-    let scene_left = JupiterOrbitSceneSlice()
+    //let scene_left = JupiterOrbitSceneSlice()
+    let scene_left = JupiterSolarSceneSlice()
+    
     //let scene_right = JupiterOrbitSceneSlice()
     var scene_slices = [SceneSlice]()
     
