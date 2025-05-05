@@ -13,10 +13,10 @@ class SkyStrip3D {
     
     weak var map: Sprite?
     
-    let strip: SkyMapStrip
+    let strip: SkyMap.Strip
     let spriteBuffer3D = IndexedSpriteBuffer3D()
     
-    init(strip: SkyMapStrip) {
+    init(strip: SkyMap.Strip) {
         
         self.strip = strip
         let index_ceiling = min(strip.indices.count, strip.vertices.count)
@@ -36,15 +36,6 @@ class SkyStrip3D {
                                                z: Float(z),
                                                u: Float(vertex.x_percent),
                                                v: Float(vertex.y_percent))
-            
-            /*
-            // This does render, a fake 2-D 3-D thing.
-            let sprite_vertex = Sprite3DVertex(x: Float(vertex.x_percent * 1024) + 128,
-                                               y: Float(vertex.y_percent * 512) + 128,
-                                               z: Float(0.0),
-                                               u: Float(vertex.x_percent),
-                                               v: Float(vertex.y_percent))
-            */
             
             spriteBuffer3D.add(vertex: sprite_vertex)
             spriteBuffer3D.add(index: index)
@@ -67,8 +58,8 @@ class SkyStrip3D {
     }
     
     func draw3D(renderEncoder: MTLRenderCommandEncoder,
-                                projectionMatrix: matrix_float4x4,
-                                modelViewMatrix: matrix_float4x4) {
+                projectionMatrix: matrix_float4x4,
+                modelViewMatrix: matrix_float4x4) {
         spriteBuffer3D.uniformsVertex.projectionMatrix = projectionMatrix
         spriteBuffer3D.uniformsVertex.modelViewMatrix = modelViewMatrix
         spriteBuffer3D.uniformsFragment.red = 0.6
@@ -76,9 +67,9 @@ class SkyStrip3D {
         spriteBuffer3D.uniformsFragment.blue = 1.0
         spriteBuffer3D.uniformsFragment.alpha = 1.0
         spriteBuffer3D.setDirty(isVertexBufferDirty: true,
-                             isIndexBufferDirty: false,
-                             isUniformsVertexBufferDirty: true,
-                             isUniformsFragmentBufferDirty: true)
+                                isIndexBufferDirty: false,
+                                isUniformsVertexBufferDirty: true,
+                                isUniformsFragmentBufferDirty: true)
         
         spriteBuffer3D.render(renderEncoder: renderEncoder, pipelineState: .spriteNodeIndexed3DNoBlending)
         

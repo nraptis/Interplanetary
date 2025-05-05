@@ -1,3 +1,4 @@
+
 import Cocoa
 
 class InterplanetaryContainerViewController: NSViewController {
@@ -41,9 +42,7 @@ class InterplanetaryContainerViewController: NSViewController {
         
         self.view = rootView // ✅ Important!
         
-        
         rootView.addSubview(skyControlPanel)
-        
     }
     
     func awake(interplanetaryViewModel: InterplanetaryViewModel, interplanetaryScene: InterplanetaryScene) {
@@ -62,4 +61,5 @@ class InterplanetaryContainerViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
 }

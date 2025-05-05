@@ -37,10 +37,6 @@ final class RootViewModel: NSObject, @unchecked Sendable {
         let appHeight = Device.height
         
         let graphics = interplanetaryContainerViewController.interplanetaryViewController.graphics
-        interplanetaryScene.awake(appWidth: appWidth,
-                                  appHeight: appHeight,
-                                  graphicsWidth: graphics.width,
-                                  graphicsHeight: graphics.height)
         interplanetaryContainerViewController.awake(interplanetaryViewModel: interplanetaryViewModel,
                                                     interplanetaryScene: interplanetaryScene)
         
