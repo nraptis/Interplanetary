@@ -24,6 +24,8 @@ protocol GraphicsDelegate: AnyObject {
     @MainActor func draw3DPrebloom(renderEncoder: MTLRenderCommandEncoder)
     @MainActor func draw3DBloom(renderEncoder: MTLRenderCommandEncoder)
     @MainActor func draw3D(renderEncoder: MTLRenderCommandEncoder)
+    @MainActor func draw3DAtmosphere(renderEncoder: MTLRenderCommandEncoder)
+    
     @MainActor func draw2D(renderEncoder: MTLRenderCommandEncoder)
 	@MainActor func postdraw()
 	

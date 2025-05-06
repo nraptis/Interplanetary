@@ -199,6 +199,17 @@ class InterplanetaryScene: GraphicsDelegate {
         }
     }
     
+    func draw3DAtmosphere(renderEncoder: MTLRenderCommandEncoder) {
+        
+        guard let graphics = graphics else {
+            fatalError("Expected graphics on draw3DAtmosphere")
+        }
+        
+        for scene_slice in scene_slices {
+            scene_slice.draw3DAtmosphere(renderEncoder: renderEncoder, graphics: graphics, interplanetaryScene: self)
+        }
+    }
+    
     func draw2D(renderEncoder: MTLRenderCommandEncoder) {
         
         guard let graphics = graphics else {

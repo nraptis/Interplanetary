@@ -60,6 +60,18 @@ class SceneSlice {
         
     }
     
+    
+    @MainActor
+    func draw3DAtmosphere(renderEncoder: MTLRenderCommandEncoder, graphics: Graphics, interplanetaryScene: InterplanetaryScene) {
+        
+    }
+    
+    @MainActor
+    func draw3DDELETEMEMEMEMEME(renderEncoder: MTLRenderCommandEncoder, graphics: Graphics, interplanetaryScene: InterplanetaryScene) {
+        
+    }
+
+    
     @MainActor
     func draw2D(renderEncoder: MTLRenderCommandEncoder, graphics: Graphics, interplanetaryScene: InterplanetaryScene) {
 

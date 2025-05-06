@@ -31,8 +31,6 @@ class MetalEngine {
     var depthStateLessThan: MTLDepthStencilState!
     var depthStateLessThanEqual: MTLDepthStencilState!
     
-    var videoTexture: MTLTexture!
-    
     var storageTexture: MTLTexture!
     let storageSprite = Sprite()
     
@@ -41,6 +39,9 @@ class MetalEngine {
     
     var storageTextureBloom: MTLTexture!
     let storageSpriteBloom = Sprite()
+    
+    var storageTextureAtmosphere: MTLTexture!
+    let storageSpriteAtmosphere = Sprite()
     
     var antialiasingTexture: MTLTexture!
     
@@ -53,6 +54,8 @@ class MetalEngine {
     var depthTexture: MTLTexture!
     
     private var tileSprite = IndexedSpriteInstance2D()
+    private var tileSpriteAtmosphere = IndexedSpriteInstance2D()
+    
     private var bloomSprite2D = IndexedSpriteInstance2D()
     private var bloomCombineSprite3D = IndexedSpriteInstance3D()
     
@@ -89,6 +92,7 @@ class MetalEngine {
             tileSprite.load(graphics: graphics, sprite: nil)
             bloomSprite2D.load(graphics: graphics, sprite: nil)
             bloomCombineSprite3D.load(graphics: graphics, sprite: nil)
+            tileSpriteAtmosphere.load(graphics: graphics, sprite: nil)
         }
     }
     
@@ -111,10 +115,13 @@ class MetalEngine {
                                                           height: drawable.texture.height)
             storageTextureBloom = createStorageTexture(width: drawable.texture.width,
                                                        height: drawable.texture.height)
+            
+            storageTextureAtmosphere = createStorageTexture(width: drawable.texture.width,
+                                                       height: drawable.texture.height)
+            
             antialiasingTexture = createAntialiasingTexture(width: drawable.texture.width,
                                                             height: drawable.texture.height)
-            videoTexture = createVideoTexture(width: drawable.texture.width,
-                                              height: drawable.texture.height)
+            
             depthTexture = createDepthTexture(width: drawable.texture.width,
                                               height: drawable.texture.height)
             bloomTexture1 = createStorageTexture(width: drawable.texture.width >> 1,
@@ -125,6 +132,9 @@ class MetalEngine {
             storageSprite.load(graphics: graphics, texture: storageTexture, scaleFactor: scale)
             storageSpritePrebloom.load(graphics: graphics, texture: storageTexturePrebloom, scaleFactor: scale)
             storageSpriteBloom.load(graphics: graphics, texture: storageTextureBloom, scaleFactor: scale)
+            
+            storageSpriteAtmosphere.load(graphics: graphics, texture: storageTextureAtmosphere, scaleFactor: scale)
+            
             bloomSprite1.load(graphics: graphics, texture: bloomTexture1, scaleFactor: scale)
             bloomSprite2.load(graphics: graphics, texture: bloomTexture2, scaleFactor: scale)
         }
@@ -173,19 +183,19 @@ class MetalEngine {
         }
         
         
-        let renderPassDescriptor3DBlue = MTLRenderPassDescriptor()
-        renderPassDescriptor3DBlue.colorAttachments[0].texture = storageTexture
-        renderPassDescriptor3DBlue.colorAttachments[0].loadAction = .clear
-        renderPassDescriptor3DBlue.colorAttachments[0].storeAction = .store
-        renderPassDescriptor3DBlue.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
-        renderPassDescriptor3DBlue.depthAttachment.loadAction = .clear
-        renderPassDescriptor3DBlue.depthAttachment.clearDepth = 1.0
-        renderPassDescriptor3DBlue.depthAttachment.texture = depthTexture
+        let renderPassDescriptor3D = MTLRenderPassDescriptor()
+        renderPassDescriptor3D.colorAttachments[0].texture = storageTexture
+        renderPassDescriptor3D.colorAttachments[0].loadAction = .clear
+        renderPassDescriptor3D.colorAttachments[0].storeAction = .store
+        renderPassDescriptor3D.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        renderPassDescriptor3D.depthAttachment.loadAction = .clear
+        renderPassDescriptor3D.depthAttachment.clearDepth = 1.0
+        renderPassDescriptor3D.depthAttachment.texture = depthTexture
         
         graphics.renderTargetWidth = storageTexture.width
         graphics.renderTargetHeight = storageTexture.height
         
-        if let renderEncoder3D = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor3DBlue) {
+        if let renderEncoder3D = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor3D) {
             let width = Float(storageTextureBloom.width)
             let height = Float(storageTextureBloom.height)
             bloomCombineSprite3D.uniformsVertex.projectionMatrix.ortho(width: width, height: height)
@@ -198,6 +208,20 @@ class MetalEngine {
             renderEncoder3D.endEncoding()
         }
         
+        
+        let renderPassDescriptor3DAtmosphere = MTLRenderPassDescriptor()
+        renderPassDescriptor3DAtmosphere.colorAttachments[0].texture = storageTextureAtmosphere
+        renderPassDescriptor3DAtmosphere.colorAttachments[0].loadAction = .clear
+        renderPassDescriptor3DAtmosphere.colorAttachments[0].storeAction = .store
+        renderPassDescriptor3DAtmosphere.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        renderPassDescriptor3DAtmosphere.depthAttachment.loadAction = .clear
+        renderPassDescriptor3DAtmosphere.depthAttachment.clearDepth = 1.0
+        renderPassDescriptor3DAtmosphere.depthAttachment.texture = depthTexture
+        if let renderEncoder3D = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor3DAtmosphere) {
+            delegate.draw3DAtmosphere(renderEncoder: renderEncoder3D)
+            renderEncoder3D.endEncoding()
+        }
+        
         let renderPassDescriptor2D = MTLRenderPassDescriptor()
         renderPassDescriptor2D.colorAttachments[0].texture = antialiasingTexture
         renderPassDescriptor2D.colorAttachments[0].storeAction = .multisampleResolve
@@ -207,6 +231,7 @@ class MetalEngine {
         renderPassDescriptor2D.colorAttachments[0].loadAction = .dontCare
         if let renderEncoder2D = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor2D) {
             drawTile(renderEncoder: renderEncoder2D)
+            drawTileAtmosphere(renderEncoder: renderEncoder2D)
             delegate.draw2D(renderEncoder: renderEncoder2D)
             renderEncoder2D.endEncoding()
         }
@@ -315,21 +340,14 @@ class MetalEngine {
         tileSprite.render(renderEncoder: renderEncoder, pipelineState: .spriteNodeIndexed2DNoBlending)
     }
     
-    @MainActor func drawTilesStereoscopic(renderEncoder: MTLRenderCommandEncoder) {
-        let width = Float(storageTexture.width)
-        let height =  Float(storageTexture.height)
-        tileSprite.uniformsVertex.projectionMatrix.ortho(width: width, height: height)
-        tileSprite.uniformsVertex.modelViewMatrix = matrix_identity_float4x4
-        tileSprite.setPositionQuad(x1: 0.0, y1: 0.0, x2: width, y2: height)
-        tileSprite.setDirty(isVertexBufferDirty: false, isIndexBufferDirty: false, isUniformsVertexBufferDirty: true, isUniformsFragmentBufferDirty: false)
-        tileSprite.sprite = storageSprite
-        tileSprite.render(renderEncoder: renderEncoder, pipelineState: .spriteNodeIndexed2DNoBlending)
-        
-        tileSprite.uniformsVertex.projectionMatrix.ortho(width: width, height: height)
-        tileSprite.uniformsVertex.modelViewMatrix = matrix_identity_float4x4
-        tileSprite.setDirty(isVertexBufferDirty: false, isIndexBufferDirty: false, isUniformsVertexBufferDirty: true, isUniformsFragmentBufferDirty: false)
-        tileSprite.sprite = storageSpritePrebloom
-        tileSprite.render(renderEncoder: renderEncoder, pipelineState: .spriteNodeIndexed2DAdditiveBlending)
+    @MainActor func drawTileAtmosphere(renderEncoder: MTLRenderCommandEncoder) {
+        let width = Float(storageTextureAtmosphere.width)
+        let height =  Float(storageTextureAtmosphere.height)
+        tileSpriteAtmosphere.uniformsVertex.projectionMatrix.ortho(width: width, height: height)
+        tileSpriteAtmosphere.uniformsVertex.modelViewMatrix = matrix_identity_float4x4
+        tileSpriteAtmosphere.setPositionQuad(x1: 0.0, y1: 0.0, x2: width, y2: height)
+        tileSpriteAtmosphere.sprite = storageSpriteAtmosphere
+        tileSpriteAtmosphere.render(renderEncoder: renderEncoder, pipelineState: .spriteNodeIndexed2DAdditiveBlending)
     }
     
     @MainActor private func buildSamplerStates() {
