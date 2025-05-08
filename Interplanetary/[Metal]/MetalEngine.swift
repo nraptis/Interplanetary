@@ -182,7 +182,6 @@ class MetalEngine {
             renderEncoderBloomCombine.endEncoding()
         }
         
-        
         let renderPassDescriptor3D = MTLRenderPassDescriptor()
         renderPassDescriptor3D.colorAttachments[0].texture = storageTexture
         renderPassDescriptor3D.colorAttachments[0].loadAction = .clear
@@ -207,7 +206,6 @@ class MetalEngine {
             delegate.draw3D(renderEncoder: renderEncoder3D)
             renderEncoder3D.endEncoding()
         }
-        
         
         let renderPassDescriptor3DAtmosphere = MTLRenderPassDescriptor()
         renderPassDescriptor3DAtmosphere.colorAttachments[0].texture = storageTextureAtmosphere
